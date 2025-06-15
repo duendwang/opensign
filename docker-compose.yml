@@ -14,12 +14,35 @@ services:
       - NODE_ENV=production
       - SERVER_URL=${HOST_URL:-https://localhost:3001}/api/app
       - PUBLIC_URL=${HOST_URL:-https://localhost:3001}
+      - MASTER_KEY=${MASTER_KEY:-XnAadwKxxByMr}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/OpenSignDB}
+      - PARSE_MOUNT=${PARSE_MOUNT:-/app}
+      - SERVER_URL=${SERVER_URL:-https://${DOMAIN}/app}
+      - DO_SPACE=${AWS_BUCKET}
+      - DO_ENDPOINT=${AWS_ENDPOINT}
+      - DO_BASEURL=${AWS_BASEURL}
+      - DO_ACCESS_KEY_ID${AWS_ACCESS_KEY_ID}
+      - DO_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - DO_REGION=${AWS_REGION}
+      - USE_LOCAL=${USE_LOCAL:-TRUE}
+      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
+      - MAILGUN_SENDER=${MAILGUN_SENDER}
+      - SMTP_ENABLE=${SMTP_ENABLED:-TRUE}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_USER_EMAIL=${SMTP_USER_EMAIL}
+      - SMTP_PASS=${SMTP_PASS}
+      - PFX_BASE64=${PFX_BASE64:-./base64.pfx}
+      - PASS_PHRASE=${PASS_PHRASE:-opensign}
+      - APP_ID=opensign
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.opensign-server.entrypoints=websecure"
-      - "traefik.http.routers.opensign-server.rule=Host(`${DOMAIN}`) & PathPrefix(`/api`)"
+      - "traefik.http.routers.opensign-server.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.opensign-server.tls.certresolver=http-challenge"
-      - 'traefik.http.routers.opensign-server.middlewares=opensign-stripprefix'
+      - 'traefik.http.routers.opensign-server.middlewares=opensign-server-stripprefix'
       - 'traefik.http.middlewares.opensign-server-stripprefix.stripprefix.prefixes=/api'
     networks:
       - app-network
